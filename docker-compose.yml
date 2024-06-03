@@ -1,0 +1,37 @@
+# version tag is deprecated
+
+services:
+  # Adguard Home: DNS ad blocker and sinkhole
+  #
+  adguard-home:
+    image: adguard/adguardhome
+    container_name: adguard-home
+    network_mode: 'host'
+    # required ports if not using host networking
+    #ports:
+    #  - '53:53/tcp'
+    #  - '53:53/udp'
+    #  - '853:853/tcp'
+    #  - '853:853/udp'
+    #  - '80:80/tcp'
+    #  - '443:443/tcp'
+    #  - '443:443/udp'
+    #  - '5443:5443:/tcp'
+    #  - '5443:5443:/udp'
+    #  - '3000:3000/tcp'
+    volumes:
+      - ${CDATA}/adguard/workdir:/opt/adguardhome/work
+      - ${CDATA}/adguard/confdir:/opt/adguardhome/conf
+    restart: unless-stopped
+
+  # Cloudflare DDNS provider
+  #
+  cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    network_mode: 'host'
+    restart: always
+    environment:
+      - API_KEY=${CF_API}
+      - ZONE=${CF_ZONE}
+      - PROXIED=true
