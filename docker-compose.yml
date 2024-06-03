@@ -19,10 +19,12 @@ services:
     #  - '5443:5443:/tcp'
     #  - '5443:5443:/udp'
     #  - '3000:3000/tcp'
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - ${CDATA}/adguard/workdir:/opt/adguardhome/work
       - ${CDATA}/adguard/confdir:/opt/adguardhome/conf
-    restart: unless-stopped
 
   # Cloudflare DDNS provider
   #
@@ -30,7 +32,9 @@ services:
     image: oznu/cloudflare-ddns:latest
     container_name: cloudflare-ddns
     network_mode: 'host'
-    restart: always
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       - API_KEY=${CF_API}
       - ZONE=${CF_ZONE}
